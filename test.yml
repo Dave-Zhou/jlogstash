@@ -1,4 +1,30 @@
 inputs:
-      - Stdin : {}
+      - File : {
+        path : ["/Users/Dave/Documents/viom_big_data/test.txt"],
+        startPosition : "beginning",
+#        sinceDbPath : "/Users/Dave/Documents/viom_big_data/jlogstash/data/sincedb.yaml"
+        sinceDbPath : "/dev/null"
+      }
+filters:
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{ALARMTRANSFORM}":""},
+        patternFile : "/Users/Dave/projects/idea-pro/jlogstash/src/main/resources/patterns/grok-patterns"
+      }
+      - KV : {
+        source : "data",
+        field_split : ","
+      }
+      - Remove : {
+        fields : ["message","data"]
+      }
 outputs:
-      - Stdout : {}
+      - Stdout : {
+        codec : "json_lines"
+      }
+      - Elasticsearch5 : {
+        index : "cnc",
+        documentType : "alarm",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"]
+      }

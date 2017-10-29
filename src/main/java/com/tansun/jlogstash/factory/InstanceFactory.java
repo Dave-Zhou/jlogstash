@@ -28,7 +28,6 @@ import com.tansun.jlogstash.annotation.plugin.AnnotationInterface;
 import com.tansun.jlogstash.assembly.CmdLineParams;
 import com.tansun.jlogstash.classloader.JarClassLoader;
 import com.tansun.jlogstash.property.SystemProperty;
-import com.tansun.jlogstash.utils.Package;
 
 
 /**
@@ -59,7 +58,7 @@ public abstract class InstanceFactory {
 							for(Annotation an:ans){
 								if(an!=null){
 									String annotationPackage = SystemProperty.getSystemProperty("annotationPackage");
-									Package pack = an.annotationType().getPackage();
+									java.lang.Package pack = an.annotationType().getPackage();
 									if(pack!=null){
 										if(annotationPackage.equals(pack.getName())){
 											logger.warn("field: {} annotation:{} check",name,an.annotationType().getSimpleName());
@@ -122,7 +121,7 @@ public abstract class InstanceFactory {
 	}
 	
 	protected static String getClassName(String type,String pluginType){
-		String className = Package.getRealClassName(type, pluginType);
+		String className = com.tansun.jlogstash.utils.Package.getRealClassName(type, pluginType);
         return className;
 	}
 	

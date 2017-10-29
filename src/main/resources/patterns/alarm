@@ -1,0 +1,2 @@
+# alarm formats
+ALARMTRANSFORM %{TIMESTAMP_ISO8601:AlarmDate}\s%{GREEDYDATA:data}

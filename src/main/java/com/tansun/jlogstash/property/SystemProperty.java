@@ -24,18 +24,18 @@ import java.math.BigDecimal;
  * 
  * Reason: TODO ADD REASON(可选)
  * Date: 2016年8月31日 下午1:27:36
- * Company: www.dtstack.com
+ * Company: www.tansun.com
  * @author sishu.yss
  *
  */
 public class SystemProperty {
 	
 	static{
-		System.setProperty("input", "com.dtstack.jlogstash.inputs");
-		System.setProperty("filter", "com.dtstack.jlogstash.filters");
-		System.setProperty("output", "com.dtstack.jlogstash.outputs");
-		System.setProperty("annotationPlugin", "com.dtstack.jlogstash.annotation.plugin");
-		System.setProperty("annotationPackage","com.dtstack.jlogstash.annotation");
+		System.setProperty("input", "com.tansun.jlogstash.inputs");
+		System.setProperty("filter", "com.tansun.jlogstash.filters");
+		System.setProperty("output", "com.tansun.jlogstash.outputs");
+		System.setProperty("annotationPlugin", "com.tansun.jlogstash.annotation.plugin");
+		System.setProperty("annotationPackage","com.tansun.jlogstash.annotation");
 	}
 	
 	public static String getSystemProperty(String key){
