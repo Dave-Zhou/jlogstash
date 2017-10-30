@@ -15,6 +15,9 @@ filters:
         source : "data",
         field_split : ","
       }
+      - DateISO8601 : {
+        match : {"AlarmDate":{"srcFormat":"yyyy-MM-dd HH:mm:ss.SSS","target":"timestamp","locale":"en","timezone" : "UTC"}}
+      }
       - Remove : {
         fields : ["message","data"]
       }
@@ -23,8 +26,7 @@ outputs:
         codec : "json_lines"
       }
       - Elasticsearch5 : {
-        index : "cnc",
-        documentType : "alarm",
+        index : "cnc-%{+YYYY.MM.dd}",
         cluster : "cnc",
         hosts : ["127.0.0.1:9300"]
       }

@@ -68,7 +68,7 @@ public abstract class BaseOutput implements Cloneable, java.io.Serializable{
 				try {
 					IF.add(new FreeMarkerRender(c, c));
 				} catch (IOException e) {
-					logger.error(e.getMessage());
+					logger.error("Output exec error",e);
 					System.exit(1);
 				}
 			}
