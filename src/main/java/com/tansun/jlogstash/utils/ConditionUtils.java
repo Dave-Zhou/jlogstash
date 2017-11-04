@@ -11,14 +11,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ConditionUtils {
   public static boolean isTrue(Map<Object,Object> event, String condition) {
-    //通过type判断是否需要执行
-    if(!StringUtils.isEmpty(condition)) {
-      String type = (String)event.get("type");
-      if(condition.contains("==")) {
-        String[] arr = condition.split("==");
-        if(arr[1].trim().equals(type)) {
-          return true;
-        }
+    //通过type判断是否需要执行type
+    if(condition.contains("==")) {
+      String[] arr = condition.split("==");
+      String key = arr[0].trim().substring(1,arr[0].length()-2);
+      Object val = event.get(key);
+      if(arr[1].trim().equals(val + "")) {
+        return true;
       }
     }
     return false;
