@@ -34,8 +34,12 @@ public abstract class LogComponent {
 	
 	protected String checkFile(){
 		String logfile = CmdLineParams.getLogFilePath();
+		String logPath = System.getProperty("user.dir");
 		if(StringUtils.isBlank(logfile)){
-			return String.format("%s/%s", System.getProperty("user.dir"),"logs/jlogstash.log");
+			if(logPath.endsWith("/bin")) {
+				logPath = logPath.substring(0,logPath.indexOf("/bin"));
+			}
+			return String.format("%s/%s", logPath+"/logs","jlogstash.log");
 		}
 		return logfile;
 	}

@@ -1,6 +1,8 @@
 inputs:
       - File : {
-        path : ["/Users/Dave/Documents/viom_big_data/test.txt"],
+        path : ["/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/Alarm_0.txt"],
+#       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/PMCData_0.txt",
+#       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/ToolOffsetHistory_0.txt",
         startPosition : "beginning",
 #        sinceDbPath : "/Users/Dave/Documents/viom_big_data/jlogstash/data/sincedb.yaml"
         sinceDbPath : "/dev/null"
@@ -13,20 +15,24 @@ filters:
       }
       - KV : {
         source : "data",
-        field_split : ","
+        field_split : ",",
+        trimkey : "\\s"
       }
       - DateISO8601 : {
         match : {"AlarmDate":{"srcFormat":"yyyy-MM-dd HH:mm:ss.SSS","target":"timestamp","locale":"en","timezone" : "UTC"}}
       }
+      - Add : {
+        fields : {"ip":"10.175.10.109"}
+      }
       - Remove : {
-        fields : ["message","data"]
+        fields : ["message","data","AlarmDate"]
       }
 outputs:
-      - Stdout : {
-        codec : "json_lines"
-      }
       - Elasticsearch5 : {
         index : "cnc-%{+YYYY.MM.dd}",
         cluster : "cnc",
-        hosts : ["127.0.0.1:9300"]
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
       }

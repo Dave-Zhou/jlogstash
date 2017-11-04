@@ -69,6 +69,9 @@ public class JarClassLoader {
 	private Map<String,URL[]> getClassLoadJarUrls(){
 		Map<String,URL[]>  result  = Maps.newConcurrentMap();
 		try{
+			if(userDir.endsWith("/bin")) {
+				userDir = userDir.substring(0,userDir.indexOf("/bin"));
+			}
 			logger.warn("userDir:{}",userDir);
 			String input = String.format("%s/plugin/input", userDir);
 			File finput = new File(input);
