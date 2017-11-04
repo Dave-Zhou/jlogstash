@@ -39,7 +39,8 @@ public abstract class LogComponent {
 			if(logPath.endsWith("/bin")) {
 				logPath = logPath.substring(0,logPath.indexOf("/bin"));
 			}
-			return String.format("%s/%s", logPath+"/logs","jlogstash.log");
+			logPath = logPath + "/logs";
+			return String.format("%s/%s", logPath,"jlogstash.log");
 		}
 		return logfile;
 	}
