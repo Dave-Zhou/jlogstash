@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
  * Created by Dave on 2017/11/5.
  *
  * @version 1.0 2017/11/5
- * @autor zxd
  */
 public class ConditionUtils {
   public static boolean isTrue(Map<Object,Object> event, String condition) {

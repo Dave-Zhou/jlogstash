@@ -77,7 +77,7 @@ public class LogbackComponent extends LogComponent{
 	}
 	
 	private String formateLogFile(String file){
-		int index =file.indexOf(".");
+		int index =file.indexOf(".jlogstash");
 		if(index>=0){
 			file =file.substring(0, index);
 		}
