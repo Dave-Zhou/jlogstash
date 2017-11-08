@@ -20,8 +20,7 @@ public class ConditionUtils {
         return true;
       }
     } else if (condition.contains("exist")) {
-      String[] arr = condition.split("exits");
-      String key = arr[0].trim().substring(1,arr[0].length()-2);
+      String key = condition.trim().substring(1,condition.trim().indexOf("exist") - 2);
       return event.containsKey(key);
     }
     return false;

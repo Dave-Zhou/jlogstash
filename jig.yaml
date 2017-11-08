@@ -1,0 +1,98 @@
+inputs:
+      - File : {
+        path : ["/Users/Dave/Documents/viom_big_data/ss.txt"],
+#       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/PMCData_0.txt",
+#       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/ToolOffsetHistory_0.txt",
+        startPosition : "beginning",
+#        sinceDbPath : "/Users/Dave/Documents/viom_big_data/jlogstash/data/sincedb.yaml"
+        sinceDbPath : "/dev/null"
+      }
+filters:
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{JIG}":""},
+        patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
+      }
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{ALARMDETAIL}":""},
+        patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
+      }
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{EQINFO}":""},
+        patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
+      }
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{PRODUCTION}":""},
+        patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
+      }
+      - JGrok : {
+        srcs : ["message"],
+        patterns : {"%{UPRIGHT}":""},
+        patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
+      }
+      - DateISO8601 : {
+        match : {"Date":{"srcFormat":"yyyy-MM-dd HH:mm:ss,SSS","target":"timestamp","locale":"en","timezone" : "UTC"}}
+      }
+      - Add : {
+        fields : {"ip":"10.175.10.109"}
+      }
+      - Remove : {
+        fields : ["message","Date","Levels","path"]
+      }
+outputs:
+      # - Stdout : {
+      #   codec : "json_lines"
+      # }
+      - Elasticsearch5 : {
+        condition : "[JIGId] exist",
+        index : "spj",
+        documentType: "JIG",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
+      }
+      - Elasticsearch5 : {
+        condition : "[AlarmCode] exist",
+        index : "spj",
+        documentType: "AlarmDetail",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
+      }
+      - Elasticsearch5 : {
+        condition : "[EQCode] exist",
+        index : "spj",
+        documentType: "EQInfo",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
+      }
+      - Elasticsearch5 : {
+        condition : "[DayTotalCount] exist",
+        index : "spj",
+        documentType: "Production",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
+      }
+      - Elasticsearch5 : {
+        condition : "[UprightCode] exist",
+        index : "spj",
+        documentType: "Upright",
+        cluster : "cnc",
+        hosts : ["127.0.0.1:9300"],
+        numberOfShards : 5,
+        numberOfReplicas : 1,
+        totalFields : 1000
+      }
