@@ -19,6 +19,10 @@ public class ConditionUtils {
       if(arr[1].trim().equals(val + "")) {
         return true;
       }
+    } else if (condition.contains("exist")) {
+      String[] arr = condition.split("exits");
+      String key = arr[0].trim().substring(1,arr[0].length()-2);
+      return event.containsKey(key);
     }
     return false;
   }
