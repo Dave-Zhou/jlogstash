@@ -17,6 +17,10 @@
  */
 package com.tansun.jlogstash.classloader;
 
+import com.google.common.collect.Maps;
+import com.tansun.jlogstash.exception.ExceptionUtil;
+import com.tansun.jlogstash.exception.LogstashException;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,96 +31,94 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.tansun.jlogstash.exception.ExceptionUtil;
-import com.tansun.jlogstash.exception.LogstashException;
-import com.google.common.collect.Maps;
-
 /**
- * 
  * Reason: TODO ADD REASON(可选)
  * Date: 2016年12月16日 下午15:26:07
  * Company: www.dtstack.com
- * @author sishu.yss
  *
+ * @author sishu.yss
  */
 public class JarClassLoader {
-	
-	private static Logger logger = LoggerFactory.getLogger(JarClassLoader.class);
 
-	private static String userDir = System.getProperty("user.dir");
-	
-	private Map<String,URL[]> jarUrls = null;
-	
-	public JarClassLoader(){
-		if(jarUrls==null){
-			jarUrls = getClassLoadJarUrls();
-			if(jarUrls != null&&jarUrls.size() > 0){
-				Thread.currentThread().setContextClassLoader(null);
-			}
-		}
-	}
-		
-	public ClassLoader getClassLoaderByPluginName(String name){
-		URL[] urls =  jarUrls.get(name);
-		ClassLoader classLoader = this.getClass().getClassLoader();
-		if(urls==null || urls.length==0){
-			 logger.warn("{}:load by AppclassLoader",name);
-			 return classLoader;
-		}
-		return new URLClassLoader(urls,classLoader);
-	}
-	
-	private Map<String,URL[]> getClassLoadJarUrls(){
-		Map<String,URL[]>  result  = Maps.newConcurrentMap();
-		try{
-			if(userDir.endsWith("/bin")) {
-				userDir = userDir.substring(0,userDir.indexOf("/bin"));
-			}
-			logger.warn("userDir:{}",userDir);
-			String input = String.format("%s/plugin/input", userDir);
-			File finput = new File(input);
-			if(!finput.exists()){
-				throw new LogstashException(String.format("%s direcotry not found", input));
-			}
-			
-			String filter = String.format("%s/plugin/filter", userDir);
-			File ffilter = new File(filter);
-		    if(!ffilter.exists()){
-				throw new LogstashException(String.format("%s direcotry not found", filter));
-			}
-			
-			String output = String.format("%s/plugin/output", userDir);
-			File foutput = new File(output);
-			if(!foutput.exists()){
-					throw new LogstashException(String.format("%s direcotry not found", output));
-			}
-			Map<String,URL[]>  inputs = getClassLoadJarUrls(finput);
-			result.putAll(inputs);
-			Map<String,URL[]>  filters = getClassLoadJarUrls(ffilter);
-			result.putAll(filters);
-			Map<String,URL[]>  outputs = getClassLoadJarUrls(foutput);
-			result.putAll(outputs);
-			logger.warn("getClassLoadJarUrls:{}",result);
-		}catch(Exception e){
-			logger.error("getClassLoadJarUrls error:{}",ExceptionUtil.getErrorMessage(e));
-		}
-		return result;
-	}
-	
-	private Map<String,URL[]> getClassLoadJarUrls(File dir) throws MalformedURLException, IOException{
-		String dirName = dir.getName();
-		Map<String,URL[]> jurls = Maps.newConcurrentMap();
-		File[] files = dir.listFiles();
-	    if (files!=null&&files.length>0){
-			for(File f:files){
-				String jarName = f.getName();
-				if(f.isFile()&&jarName.endsWith(".jar")){
-					jarName = jarName.split("-")[0].toLowerCase();
-					String[] jns = jarName.split("\\.");
-					jurls.put(String.format("%s:%s",dirName,jns.length==0?jarName:jns[jns.length-1]), new URL[]{f.toURI().toURL()});
-				}
-			}
-	    }
-		return jurls;
-	}
+  private static Logger logger = LoggerFactory.getLogger(JarClassLoader.class);
+
+  private static String userDir = System.getProperty("user.dir");
+
+  private Map<String, URL[]> jarUrls = null;
+
+  public JarClassLoader() {
+    if (jarUrls == null) {
+      jarUrls = getClassLoadJarUrls();
+      if (jarUrls != null && jarUrls.size() > 0) {
+        Thread.currentThread().setContextClassLoader(null);
+      }
+    }
+  }
+
+  public ClassLoader getClassLoaderByPluginName(String name) {
+    URL[] urls = jarUrls.get(name);
+    ClassLoader classLoader = this.getClass().getClassLoader();
+    if (urls == null || urls.length == 0) {
+      logger.info("{}:load by AppclassLoader", name);
+      return classLoader;
+    }
+    return new URLClassLoader(urls, classLoader);
+  }
+
+  private Map<String, URL[]> getClassLoadJarUrls() {
+    Map<String, URL[]> result = Maps.newConcurrentMap();
+    try {
+      if (userDir.endsWith("/bin")) {
+        userDir = userDir.substring(0, userDir.indexOf("/bin"));
+      }
+      logger.info("userDir:{}", userDir);
+      String input = String.format("%s/plugin/input", userDir);
+      File finput = new File(input);
+      if (!finput.exists()) {
+        throw new LogstashException(String.format("%s direcotry not found", input));
+      }
+
+      String filter = String.format("%s/plugin/filter", userDir);
+      File ffilter = new File(filter);
+      if (!ffilter.exists()) {
+        throw new LogstashException(String.format("%s direcotry not found", filter));
+      }
+
+      String output = String.format("%s/plugin/output", userDir);
+      File foutput = new File(output);
+      if (!foutput.exists()) {
+        throw new LogstashException(String.format("%s direcotry not found", output));
+      }
+      Map<String, URL[]> inputs = getClassLoadJarUrls(finput);
+      result.putAll(inputs);
+      Map<String, URL[]> filters = getClassLoadJarUrls(ffilter);
+      result.putAll(filters);
+      Map<String, URL[]> outputs = getClassLoadJarUrls(foutput);
+      result.putAll(outputs);
+      logger.info("getClassLoadJarUrls:{}", result);
+    } catch (Exception e) {
+      logger.error("getClassLoadJarUrls error:{}", ExceptionUtil.getErrorMessage(e));
+    }
+    return result;
+  }
+
+  private Map<String, URL[]> getClassLoadJarUrls(File dir)
+      throws MalformedURLException, IOException {
+    String dirName = dir.getName();
+    Map<String, URL[]> jurls = Maps.newConcurrentMap();
+    File[] files = dir.listFiles();
+    if (files != null && files.length > 0) {
+      for (File f : files) {
+        String jarName = f.getName();
+        if (f.isFile() && jarName.endsWith(".jar")) {
+          jarName = jarName.split("-")[0].toLowerCase();
+          String[] jns = jarName.split("\\.");
+          jurls
+              .put(String.format("%s:%s", dirName, jns.length == 0 ? jarName : jns[jns.length - 1]),
+                  new URL[]{f.toURI().toURL()});
+        }
+      }
+    }
+    return jurls;
+  }
 }

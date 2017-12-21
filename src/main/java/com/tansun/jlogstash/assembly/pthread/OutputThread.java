@@ -58,12 +58,19 @@ public class OutputThread implements Runnable{
     
 	@SuppressWarnings("rawtypes")
 	public static  void initOutPutThread(List<Map> outputs,OutPutQueueList outPutQueueList,List<BaseOutput> allBaseOutputs) throws Exception{
+
 		if(outputExecutor==null)outputExecutor= Executors.newFixedThreadPool(outPutQueueList.getQueueList().size());
+
 		for(BlockingQueue<Map<String, Object>> queueList:outPutQueueList.getQueueList()){
+
 			List<BaseOutput> baseOutputs = OutputFactory.getBatchInstance(outputs);
+
 			allBaseOutputs.addAll(baseOutputs);
+
 			outputExecutor.submit(new OutputThread(baseOutputs,queueList));
+
 		}
+
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class CmdLineParams {
 	public static double getInputQueueCoefficient(){
 		String number =line.getOptionValue("c");
 		double coefficient =StringUtils.isNotBlank(number)?Double.parseDouble(number):SystemProperty.getInputProportion();
-		logger.warn("input queue coefficient:{}",String.valueOf(coefficient));
+		logger.info("input queue coefficient:{}",String.valueOf(coefficient));
 		return coefficient;
 	}
 	
@@ -60,7 +60,7 @@ public class CmdLineParams {
 	public static double getOutputQueueCoefficient(){
 		String number =line.getOptionValue("i");
 		double coefficient =StringUtils.isNotBlank(number)?Double.parseDouble(number):SystemProperty.getOutputProportion();	
-		logger.warn("output queue coefficient:{}",String.valueOf(coefficient));
+		logger.info("output queue coefficient:{}",String.valueOf(coefficient));
 		return coefficient;
 	}
 	
@@ -68,7 +68,7 @@ public class CmdLineParams {
 	public static int getFilterWork(){
 		String number =line.getOptionValue("w");
         int works =StringUtils.isNotBlank(number)?Integer.parseInt(number):getInputBase();	
-		logger.warn("filter works:{}",String.valueOf(works));
+		logger.info("filter works:{}",String.valueOf(works));
         return works;
 	}
 	
@@ -76,7 +76,7 @@ public class CmdLineParams {
 	public static int getOutputWork(){
 		String number =line.getOptionValue("o");
         int works =StringUtils.isNotBlank(number)?Integer.parseInt(number):getOutputBase();	
-		logger.warn("output works:{}",String.valueOf(works));
+		logger.info("output works:{}",String.valueOf(works));
         return works;
 	}
 	
@@ -85,7 +85,7 @@ public class CmdLineParams {
 		float number = getFilterWork();
         int size = Public.getIntValue(monitorInfo.getJvmMaxMemory()*getInputQueueCoefficient()*((float)getInputBase()/number));
 		size = size<=0?10:size;
-        logger.warn("input queue size:{}",String.valueOf(size));
+        logger.info("input queue size:{}",String.valueOf(size));
         return size;
 	}
 	
@@ -104,7 +104,7 @@ public class CmdLineParams {
 		float number =getOutputWork();
 		int size = Public.getIntValue(monitorInfo.getJvmMaxMemory()*getOutputQueueCoefficient()*((float)getOutputBase()/number));
 		size = size<=0?10:size;
-		logger.warn("output queue size:{}",String.valueOf(size));
+		logger.info("output queue size:{}",String.valueOf(size));
 		return size;	
 	}
 	

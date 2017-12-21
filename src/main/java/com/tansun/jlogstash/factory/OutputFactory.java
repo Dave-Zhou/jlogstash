@@ -54,23 +54,42 @@ public class OutputFactory extends InstanceFactory{
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static List<BaseOutput> getBatchInstance(List<Map> outputs) throws Exception{
+
 		if(outputs==null||outputs.size()==0)return null;
+
 		List<BaseOutput> baseoutputs = Lists.newArrayList();
+
 		for(int i=0;i<outputs.size();i++){
+
 			Iterator<Entry<String, Map>> outputIT = outputs.get(i).entrySet().iterator();
+
 			while (outputIT.hasNext()) {
+
 				Map.Entry<String, Map> outputEntry = outputIT.next();
+
 				String outputType = outputEntry.getKey();
+
 				Map outputConfig = outputEntry.getValue();
+
 				String className = getClassName(outputType,PLUGINTYPE);
+
 				String key = String.format("%s%d",className, i);
+
 				Class<?> outputClass = outputsClassLoader.get(key);
+
 				if(outputClass==null){
+
 				    outputClass = getPluginClass(outputType,PLUGINTYPE,className);
+
 				    outputsClassLoader.put(key, outputClass);
 				}
-				if(outputConfig==null)outputConfig=Maps.newLinkedHashMap();
+
+				if(outputConfig==null)
+
+					outputConfig=Maps.newLinkedHashMap();
+
 				baseoutputs.add(getInstance(outputType,outputConfig,outputClass));
+
 			}
 		}
 		return baseoutputs;

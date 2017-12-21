@@ -17,25 +17,29 @@
  */
 package com.tansun.jlogstash.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.tansun.jlogstash.property.SystemProperty;
+
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
- * 
  * Reason: TODO ADD REASON(可选)
  * Date: 2016年8月31日 下午1:28:43
  * Company: www.dtstack.com
- * @author sishu.yss
  *
+ * @author sishu.yss
  */
-public class Package {	
-	private static String point =".";
-	
-	public static String getRealClassName(String name,String key){
-		if(StringUtils.isBlank(name))return null;
-		if(name.indexOf(point)>=0)return name;
-		return SystemProperty.getSystemProperty(key)+point+name;
-	}
+public class Package {
+
+  private static String point = ".";
+
+  public static String getRealClassName(String name, String key) {
+    if (StringUtils.isBlank(name)) {
+      return null;
+    }
+    if (name.indexOf(point) >= 0) {
+      return name;
+    }
+    return SystemProperty.getSystemProperty(key) + point + name;
+  }
 }

@@ -18,7 +18,7 @@
     <!--这个输出控制台的配置-->
     <Console name="Console" target="SYSTEM_OUT">
       <!--控制台只输出level及其以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-      <!--<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>-->
+      <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
       <!--日志输出的格式-->
       <!--
           %d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间,输出到毫秒的时间
