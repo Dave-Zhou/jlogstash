@@ -34,6 +34,7 @@ import com.google.common.collect.Maps;
  * @author sishu.yss
  *
  */
+@SuppressWarnings("Duplicates")
 public class OutputFactory extends InstanceFactory{
 	
 	private static Map<String,Class<?>> outputsClassLoader = Maps.newConcurrentMap();

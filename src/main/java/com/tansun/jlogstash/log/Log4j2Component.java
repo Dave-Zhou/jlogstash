@@ -17,33 +17,45 @@
  */
 package com.tansun.jlogstash.log;
 
-import org.apache.commons.lang3.StringUtils;
-import com.tansun.jlogstash.assembly.CmdLineParams;
+import java.io.File;
+import java.io.FileInputStream;
 
-import java.io.IOException;
+import org.apache.logging.log4j.core.config.ConfigurationSource;
+import org.apache.logging.log4j.core.config.Configurator;
 
 /**
- * 
  * Reason: TODO ADD REASON(可选)
- * Date: 2016年8月31日 下午1:27:21
+ * Date: 2016年8月31日 下午1:27:09
  * Company: www.dtstack.com
- * @author sishu.yss
  *
+ * @author sishu.yss
  */
-public abstract class LogComponent {
-	
-	public void setupLogger() throws IOException {}
-	
-	protected String checkFile(){
-		String logfile = CmdLineParams.getLogFilePath();
-		String logPath = System.getProperty("user.dir");
-		if(StringUtils.isBlank(logfile)){
-			if(logPath.endsWith("/bin")) {
-				logPath = logPath.substring(0,logPath.indexOf("/bin"));
-			}
-			logPath = logPath + "/logs";
-			return String.format("%s/%s", logPath,"jlogstash.log");
-		}
-		return logfile;
-	}
+public class Log4j2Component extends LogComponent {
+
+  @Override
+  public void setupLogger(){
+
+    //这里需要注意路径中不要出现中文和空格，如果存在中文，请使用url转码
+    ConfigurationSource source;
+
+    String config=System.getProperty("user.dir");
+
+    String path = config + File.separator + "config" + File.separator + "log4j2.xml";
+
+    File file = new File(path);
+
+    try {
+
+      source = new ConfigurationSource(new FileInputStream(file));
+
+      Configurator.initialize(Log4j2Component.class.getClassLoader(),source);
+
+    } catch (Exception e) {
+
+      e.printStackTrace();
+
+    }
+
+  }
+
 }

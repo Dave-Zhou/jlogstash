@@ -8,3 +8,5 @@ target/*
 plugin/
 *.iml
 /lib/
+jlogstah.iml
+dependency-reduced-pom.xml

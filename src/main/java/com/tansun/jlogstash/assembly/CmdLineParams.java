@@ -39,7 +39,7 @@ import com.tansun.jlogstash.utils.Public;
 public class CmdLineParams {
 	
 	private static Logger logger  = LoggerFactory.getLogger(CmdLineParams.class);
-	
+
 	private static MonitorInfo monitorInfo = new MonitorService().getMonitorInfoBean();
 	
 	private static CommandLine line;
@@ -51,7 +51,7 @@ public class CmdLineParams {
 
 	public static double getInputQueueCoefficient(){
 		String number =line.getOptionValue("c");
-		double coefficient =StringUtils.isNotBlank(number)?Double.parseDouble(number):SystemProperty.getInputProportion();	
+		double coefficient =StringUtils.isNotBlank(number)?Double.parseDouble(number):SystemProperty.getInputProportion();
 		logger.warn("input queue coefficient:{}",String.valueOf(coefficient));
 		return coefficient;
 	}

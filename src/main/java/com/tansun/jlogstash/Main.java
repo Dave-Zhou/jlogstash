@@ -17,14 +17,11 @@
  */
 package com.tansun.jlogstash;
 
-import org.apache.commons.cli.CommandLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.tansun.jlogstash.assembly.AssemblyPipeline;
 import com.tansun.jlogstash.assembly.CmdLineParams;
-import com.tansun.jlogstash.exception.ExceptionUtil;
-import com.tansun.jlogstash.log.LogComponent;
-import com.tansun.jlogstash.log.LogbackComponent;
+import com.tansun.jlogstash.log.Log4j2Component;
+
+import org.apache.commons.cli.CommandLine;
 
 /**
  * 
@@ -35,22 +32,22 @@ import com.tansun.jlogstash.log.LogbackComponent;
  *
  */
 public class Main {
-	private static final Logger logger = LoggerFactory.getLogger(Main.class);
-	
-	private static AssemblyPipeline assemblyPipeline = new AssemblyPipeline();
-	
-	private static LogComponent logbackComponent = new LogbackComponent();
-	
 	public static void main(String[] args) {
 		try {
-			CommandLine cmdLine = OptionsProcessor.parseArg(args);
-			CmdLineParams.setLine(cmdLine);
+			Log4j2Component log4j2Component = new Log4j2Component();
 			//logger config
-            logbackComponent.setupLogger();
-            //assembly pipeline
-            assemblyPipeline.assemblyPipeline();
+			log4j2Component.setupLogger();
+
+			CommandLine cmdLine = OptionsProcessor.parseArg(args);
+
+			CmdLineParams.setLine(cmdLine);
+
+			AssemblyPipeline assemblyPipeline = new AssemblyPipeline();
+			//assembly pipeline
+			assemblyPipeline.assemblyPipeline();
 		} catch (Exception e) {
-			logger.error("jlogstash start error:{}",ExceptionUtil.getErrorMessage(e));
+			e.printStackTrace();
+//			logger.error("jlogstash start error:{}",ExceptionUtil.getErrorMessage(e));
 			System.exit(-1);
 		}
 	}

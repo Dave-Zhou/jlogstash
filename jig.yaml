@@ -1,11 +1,13 @@
 inputs:
       - File : {
-        path : ["/Users/Dave/Documents/viom_big_data/ss.txt"],
+        path : ["/Users/Dave/Documents/viom_big_data/01/*"],
+        # path : ["/Users/Dave/Documents/viom_big_data/data_0.txt"],
 #       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/PMCData_0.txt",
 #       "/Users/Dave/Documents/天阳宏业/富士康/CNCdata/10.175.10.109/ToolOffsetHistory_0.txt",
         startPosition : "beginning",
-#        sinceDbPath : "/Users/Dave/Documents/viom_big_data/jlogstash/data/sincedb.yaml"
-        sinceDbPath : "/dev/null"
+        sinceDbPath : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/data/sincedb.yaml",
+        encoding : "GBK"
+        #sinceDbPath : "/dev/null"
       }
 filters:
       - JGrok : {
@@ -34,10 +36,15 @@ filters:
         patternFile : "/Users/Dave/Documents/viom_big_data/jlogstash-1.0/grok-patterns"
       }
       - DateISO8601 : {
-        match : {"Date":{"srcFormat":"yyyy-MM-dd HH:mm:ss,SSS","target":"timestamp","locale":"en","timezone" : "UTC"}}
+        match : {"Date":{"srcFormat":"yyyy-MM-dd HH:mm:ss,SSS","target":"timestamp","timezone" : "Asia/Shanghai"}}
       }
       - Add : {
+        condition: "[MachineId] == 01",
         fields : {"ip":"10.175.10.109"}
+      }
+      - Add : {
+        condition: "[MachineId] == 02",
+        fields : {"ip":"10.175.10.111"}
       }
       - Remove : {
         fields : ["message","Date","Levels","path"]
@@ -46,7 +53,13 @@ outputs:
       # - Stdout : {
       #   codec : "json_lines"
       # }
-      - Elasticsearch5 : {
+      # - RocketMQ : {
+      #   condition : "[JIGId] exist",
+      #   topic : "JIGTopic",
+      #   namesrvAddr : "127.0.0.1:9876",
+      #   producerGroup : "JIGProducerGroup"
+      # }
+      - Elasticsearch6 : {
         condition : "[JIGId] exist",
         index : "spj",
         documentType: "JIG",
@@ -56,7 +69,7 @@ outputs:
         numberOfReplicas : 1,
         totalFields : 1000
       }
-      - Elasticsearch5 : {
+      - Elasticsearch6 : {
         condition : "[AlarmCode] exist",
         index : "spj",
         documentType: "AlarmDetail",
@@ -66,7 +79,13 @@ outputs:
         numberOfReplicas : 1,
         totalFields : 1000
       }
-      - Elasticsearch5 : {
+      # - RocketMQ : {
+      #   condition : "[EQCode] exist",
+      #   topic : "EQInfoTopic",
+      #   namesrvAddr : "127.0.0.1:9876",
+      #   producerGroup : "EQInfoProducerGroup"
+      # }
+      - Elasticsearch6 : {
         condition : "[EQCode] exist",
         index : "spj",
         documentType: "EQInfo",
@@ -76,7 +95,7 @@ outputs:
         numberOfReplicas : 1,
         totalFields : 1000
       }
-      - Elasticsearch5 : {
+      - Elasticsearch6 : {
         condition : "[DayTotalCount] exist",
         index : "spj",
         documentType: "Production",
@@ -86,7 +105,7 @@ outputs:
         numberOfReplicas : 1,
         totalFields : 1000
       }
-      - Elasticsearch5 : {
+      - Elasticsearch6 : {
         condition : "[UprightCode] exist",
         index : "spj",
         documentType: "Upright",
